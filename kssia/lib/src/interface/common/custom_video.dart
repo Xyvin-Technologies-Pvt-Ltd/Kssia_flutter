@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kssia/src/data/models/promotions_model.dart';
-
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class AutoScrollText extends StatefulWidget {
   final String text;
@@ -106,54 +105,38 @@ class _AutoScrollTextState extends State<AutoScrollText> {
   }
 }
 
-Widget customVideo({required BuildContext context, required Promotion video}) {
-  final videoUrl = video.ytLink;
+String? extractYoutubeId(String url) {
+  final RegExp regExp = RegExp(
+    r'(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)',
+    caseSensitive: false,
+  );
+  final match = regExp.firstMatch(url);
+  return match?.group(1);
+}
 
-  final ytController = YoutubePlayerController.fromVideoId(
-    videoId: YoutubePlayerController.convertUrlToId(videoUrl ?? '')!,
-    autoPlay: false,
-    params: const YoutubePlayerParams(
-      enableJavaScript: true,
+Widget customVideo({
+  required String videoId,
+  required String title,
+}) {
+  final ytController = YoutubePlayerController(
+    initialVideoId: videoId,
+    flags: const YoutubePlayerFlags(
+      disableDragSeek: true,
+      autoPlay: false,
       loop: true,
       mute: false,
-      showControls: true,
-      showFullscreenButton: true,
+      controlsVisibleAtStart: true,
+      enableCaption: true,
+      isLive: false,
     ),
   );
 
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Auto-scrolling marquee for the video title
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 10),
-        //   child: AutoScrollText(
-        //     text: video.videoTitle ?? '',
-        //     width: MediaQuery.of(context).size.width *
-        //         0.9, // Set width to avoid taking full screen
-        //   ),
-        // ),
-        Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Container(
-            width: MediaQuery.of(context).size.width - 32, // Full-screen width
-            height: 200,
-            decoration: BoxDecoration(
-              color: Colors.transparent, // Transparent background
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: YoutubePlayer(  
-                controller: ytController,
-                aspectRatio: 16 / 9,
-              ),
-            ),
-          ),
-        ),
-      ],
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(12),
+    child: YoutubePlayer(
+      controller: ytController,
+      showVideoProgressIndicator: true,
+      aspectRatio: 16 / 9,
     ),
   );
 }

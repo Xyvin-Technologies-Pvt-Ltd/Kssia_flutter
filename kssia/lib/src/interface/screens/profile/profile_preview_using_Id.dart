@@ -13,6 +13,7 @@ import 'package:kssia/src/interface/common/cards.dart';
 import 'package:kssia/src/interface/common/components/svg_icon.dart';
 import 'package:kssia/src/interface/common/customModalsheets.dart';
 import 'package:kssia/src/interface/common/custom_button.dart';
+import 'package:kssia/src/interface/common/custom_video.dart';
 import 'package:kssia/src/interface/common/loading.dart';
 import 'package:kssia/src/interface/common/review_card.dart';
 import 'package:kssia/src/interface/screens/profilepreview/social_website_preview.dart';
@@ -21,8 +22,6 @@ import 'package:kssia/src/interface/screens/menu/my_reviews.dart';
 import 'package:kssia/src/interface/screens/people/chat/chatscreen.dart';
 import 'package:kssia/src/interface/screens/profile/user_details.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
-
 class ReviewsState extends StateNotifier<int> {
   ReviewsState() : super(1);
 
@@ -504,9 +503,8 @@ class ProfilePreviewUsingId extends ConsumerWidget {
                                   itemCount: user.video!.length,
                                   physics: const PageScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                    return profileVideo(
-                                        context: context,
-                                        video: user.video![index]);
+                                     return customVideo(
+                                  title:user.video![index].name??'',videoId: extractYoutubeId(user.video![index].url??'')??'');
                                   },
                                 ),
                               ),
@@ -735,61 +733,6 @@ class ProfilePreviewUsingId extends ConsumerWidget {
     );
   }
 
-  Widget profileVideo({required BuildContext context, required Video video}) {
-    final videoUrl = video.url;
-
-    final ytController = YoutubePlayerController.fromVideoId(
-      videoId: YoutubePlayerController.convertUrlToId(videoUrl ?? '')!,
-      autoPlay: false,
-      params: const YoutubePlayerParams(
-        enableJavaScript: true,
-        loop: true,
-        mute: false,
-        showControls: true,
-        showFullscreenButton: true,
-      ),
-    );
-
-    return Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     Padding(
-          //       padding: const EdgeInsets.only(top: 10),
-          //       child: Text(video.name!,
-          //           style: const TextStyle(
-          //               fontWeight: FontWeight.bold, fontSize: 18)),
-          //     ),
-          //   ],
-          // ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Container(
-              width:
-                  MediaQuery.of(context).size.width - 32, // Full-screen width
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.transparent, // Transparent background
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: YoutubePlayer(
-                  controller: ytController,
-                  aspectRatio: 16 / 9,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Padding customProfilePreviewLinks(int index,
       {SocialMedia? social, Website? website}) {

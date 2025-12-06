@@ -9,11 +9,9 @@ import 'package:kssia/src/data/services/api_routes/events_api.dart';
 import 'package:kssia/src/data/services/api_routes/notification_api.dart';
 import 'package:kssia/src/data/services/api_routes/products_api.dart';
 import 'package:kssia/src/data/services/api_routes/user_api.dart';
-import 'package:kssia/src/data/models/user_model.dart';
 import 'package:kssia/main.dart';
 import 'package:kssia/src/data/services/nav_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../interface/common/customModalsheets.dart';
 
 // Create a provider for DeepLinkService

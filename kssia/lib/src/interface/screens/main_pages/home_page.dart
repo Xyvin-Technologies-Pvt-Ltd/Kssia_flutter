@@ -302,8 +302,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                           children: [
                             CarouselSlider(
                               items: filteredVideos.map((video) {
-                                return customVideo(
-                                    context: context, video: video);
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
+                                  child: customVideo(
+                                      title: video.videoTitle,
+                                      videoId:
+                                          extractYoutubeId(video.ytLink) ?? ''),
+                                );
                               }).toList(),
                               options: CarouselOptions(
                                 height: 225,
